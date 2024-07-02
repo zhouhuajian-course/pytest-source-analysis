@@ -1,6 +1,17 @@
 # pytest 源码分析
 
-## pytest.main()
+https://github.com/pytest-dev/pytest  
+https://github.com/pytest-dev/pluggy
+
+## PluginManager 
+
+pytest源码中，重要的PluginManager来自pluggy，
+这是从旧版本pytest中分离出来的插件管理器
+
+This is the core framework used by the pytest, tox, and devpi projects.  
+是pytest的核心框架
+
+## pytest.main() 源码分析
 
 ```python
 def main(
