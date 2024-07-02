@@ -151,3 +151,55 @@ def get_config(
 
     return config        
 ```
+
+```python
+
+# Plugins that cannot be disabled via "-p no:X" currently.
+# 必要插件
+essential_plugins = (
+    # 标记
+    "mark",
+    "main",
+    "runner",
+    # 夹具
+    "fixtures",
+    "helpconfig",  # Provides -p.
+)
+# 默认插件 = 必要插件 + 其他插件
+default_plugins = essential_plugins + (
+    "python",
+    # 终端
+    "terminal",
+    "debugging",
+    # unittest框架
+    "unittest",
+    "capture",
+    # 跳过
+    "skipping",
+    "legacypath",
+    # 临时目录
+    "tmpdir",
+    "monkeypatch",
+    "recwarn",
+    "pastebin",
+    # nose框架
+    "nose",
+    # 断言
+    "assertion",
+    "junitxml",
+    "doctest",
+    "cacheprovider",
+    "freeze_support",
+    "setuponly",
+    "setupplan",
+    "stepwise",
+    "warnings",
+    "logging",
+    # 报告
+    "reports",
+    "python_path",
+    *(["unraisableexception", "threadexception"] if sys.version_info >= (3, 8) else []),
+    "faulthandler",
+)
+
+```
