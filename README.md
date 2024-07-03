@@ -3,6 +3,118 @@
 https://github.com/pytest-dev/pytest  
 https://github.com/pytest-dev/pluggy
 
+pytest 功能非常多，本质是一个个插件组成的功能，插件由 pluggy 进行管理  
+pluggy是一个插件系统，用于pytest插件的管理和钩子调用  
+pluggy使pytest由钩子功能，实现主程序与插件连接
+
+## fixture
+
+翻译为 夹具或固件 Fixture
+
+测试前的设置 测试后的清理
+
+## conftest的conf的解释
+
+网络上没有比较靠谱的解释
+
+借鉴这个工具的说明，这个工具可能跟pytest没关系
+
+https://www.conftest.dev/
+
+应该是 configuration 的缩写
+
+## 插件发现顺序文档
+
+Plugin discovery order at tool startup
+
+https://docs.pytest.org/en/stable/how-to/writing_plugins.html#plugin-discovery-order-at-tool-startup
+
+## conftest.py文档
+
+https://docs.pytest.org/en/stable/how-to/writing_plugins.html#conftest-py-local-per-directory-plugins
+
+## 插件开发文档
+
+https://docs.pytest.org/en/latest/how-to/writing_plugins.html
+
+比较重要的 setup.py 里面有个 entry_points
+
+## 钩子执行顺序
+
+*来自网络*
+
+https://github.com/pytest-dev/pytest/issues/3261
+
+```
+root
+└── pytest_cmdline_main
+    ├── pytest_plugin_registered
+    ├── pytest_configure
+    │   └── pytest_plugin_registered
+    ├── pytest_sessionstart
+    │   ├── pytest_plugin_registered
+    │   └── pytest_report_header
+    ├── pytest_collection
+    │   ├── pytest_collectstart
+    │   ├── pytest_make_collect_report
+    │   │   ├── pytest_collect_file
+    │   │   │   └── pytest_pycollect_makemodule
+    │   │   └── pytest_pycollect_makeitem
+    │   │       └── pytest_generate_tests
+    │   │           └── pytest_make_parametrize_id
+    │   ├── pytest_collectreport
+    │   ├── pytest_itemcollected
+    │   ├── pytest_collection_modifyitems
+    │   └── pytest_collection_finish
+    │       └── pytest_report_collectionfinish
+    ├── pytest_runtestloop
+    │   └── pytest_runtest_protocol
+    │       ├── pytest_runtest_logstart
+    │       ├── pytest_runtest_setup
+    │       │   └── pytest_fixture_setup
+    │       ├── pytest_runtest_makereport
+    │       ├── pytest_runtest_logreport
+    │       │   └── pytest_report_teststatus
+    │       ├── pytest_runtest_call
+    │       │   └── pytest_pyfunc_call
+    │       ├── pytest_runtest_teardown
+    │       │   └── pytest_fixture_post_finalizer
+    │       └── pytest_runtest_logfinish
+    ├── pytest_sessionfinish
+    │   └── pytest_terminal_summary
+    └── pytest_unconfigure
+```
+
+## src/_pytest/fixtures.py
+
+fixture 源码实现
+
+https://github.com/pytest-dev/pytest/blob/main/src/_pytest/fixtures.py
+
+## pytest 三种插件
+
+*来自网络*
+
+```
+pytest插件通过hook函数来实现，pytest主要包括以下三种插件
+
+    内置插件：pytest内部的_pytest目录中加载：\Lib\site-packages\_pytest\hookspec.py
+    外部插件：pip install 插件，通过setuptools的Entry points机制来发现外部插件，可用插件列表：https://docs.pytest.org/en/latest/reference/plugin_list.html
+    本地插件：conftest.py插件，pytest自动模块发现机制，在项目根目录下的conftest文件起到全局作用，在项目下的子目录中的conftest.py文件作用范围只能在该层级及以下目录生效。
+
+他们的加载顺序为：
+
+    内置插件
+    外部插件
+    本地插件
+```
+
+## src/_pytest/hookspec.py
+
+https://github.com/pytest-dev/pytest/blob/main/src/_pytest/hookspec.py
+
+src/_pytest/hookspec.py 定义了大量 hook spec 钩子说明 类似接口、类似声明
+
 ## PluginManager 
 
 pytest源码中，重要的PluginManager来自pluggy，
