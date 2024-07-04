@@ -9,9 +9,24 @@ pluggy使pytest由钩子功能，实现主程序与插件连接
 
 ## fixture
 
-翻译为 夹具或固件 Fixture
+https://docs.pytest.org/en/8.2.x/how-to/fixtures.html
 
-测试前的设置 测试后的清理
+使用debug的方式 追踪Fixture的原理
+
+直接读fixture 不翻译成中文 
+
+```
+Fixture scopes
+
+Fixtures are created when first requested by a test, and are destroyed based on their scope:
+
+function: the default scope, the fixture is destroyed at the end of the test.
+class: the fixture is destroyed during teardown of the last test in the class.
+module: the fixture is destroyed during teardown of the last test in the module.
+package: the fixture is destroyed during teardown of the last test in the package where the fixture is defined, including sub-packages and sub-directories within it.
+session: the fixture is destroyed at the end of the test session.
+```
+
 
 ## conftest的conf的解释
 
