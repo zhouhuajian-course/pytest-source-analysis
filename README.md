@@ -7,11 +7,59 @@ pytest 功能非常多，本质是一个个插件组成的功能，插件由 plu
 pluggy是一个插件系统，用于pytest插件的管理和钩子调用  
 pluggy使pytest由钩子功能，实现主程序与插件连接
 
+1. configuration
+2. collection
+3. running
+4. reporting
+
+## hook functions
+
+https://docs.pytest.org/en/8.2.x/how-to/writing_hook_functions.html#writinghooks
+
+## plugins
+
+https://docs.pytest.org/en/8.2.x/how-to/plugins.html  
+https://docs.pytest.org/en/8.2.x/how-to/writing_plugins.html
+
+```
+builtin plugins: loaded from pytest’s internal _pytest directory.
+external plugins: modules discovered through setuptools entry points
+conftest.py plugins: modules auto-discovered in test directories
+```
+
+```
+pytest --trace-config 可以查看 插件具体位置
+```
+
 ## fixture
 
 https://docs.pytest.org/en/8.2.x/how-to/fixtures.html
 
 使用debug的方式 追踪Fixture的原理
+
+```python
+# D:\Python\Python3.12\Lib\site-packages\_pytest\python.py
+@hookimpl(trylast=True)
+def pytest_pyfunc_call(pyfuncitem: "Function") -> Optional[object]:
+    testfunction = pyfuncitem.obj
+    if is_async_function(testfunction):
+        async_warn_and_skip(pyfuncitem.nodeid)
+    funcargs = pyfuncitem.funcargs
+    # 参数 fixture
+    testargs = {arg: funcargs[arg] for arg in pyfuncitem._fixtureinfo.argnames}
+    # 调用测试函数 传测试参数
+    result = testfunction(**testargs)
+    if hasattr(result, "__await__") or hasattr(result, "__aiter__"):
+        async_warn_and_skip(pyfuncitem.nodeid)
+    elif result is not None:
+        warnings.warn(
+            PytestReturnNotNoneWarning(
+                f"Expected None, but {pyfuncitem.nodeid} returned {result!r}, which will be an error in a "
+                "future version of pytest.  Did you mean to use `assert` instead of `return`?"
+            )
+        )
+    return True
+```
 
 直接读fixture 不翻译成中文 
 
